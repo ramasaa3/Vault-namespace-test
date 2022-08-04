@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: build-agent
+ spec:
+  containers:
+    - name: buildagent
+      image: devops-docker.repository.intranet.roche.com/staging-cluster-iac:latest
+      command:
+        - cat
+      tty: true
