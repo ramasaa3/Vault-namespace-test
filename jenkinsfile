@@ -1,0 +1,36 @@
+pipeline {
+  agent {
+    kubernetes {
+        yamlFile 'cbc-test/pod_templates/build-agent.yaml'
+    }
+  }
+  environment {
+        VAULT_CREDS = credentials('vault_secret')
+        vault_init = "../../../init.sh"
+    	vault_init1 = "../../init.sh"
+    	vault_ssh = "/home/user/.ssh/config"
+    	older_rsa_path = "/home/users/honischd/stash/core-terraform/live/../secrets/test/id_rsa_secure"
+    	new_rsa_path = "/home/jenkins/agent/workspace/lines_examples_cbc_pipeline_test/secrets/test/id_rsa_secure"
+        ssh_config = "#PermitRootLogin prohibit-password"
+    	ssh_config1 = "PermitRootLogin yes"
+        config_path = "~/.ssh/config"
+    	CJOC_USER= credentials('cjetestr')
+        RND= credentials('diarnd') 
+   	localhost = "result"
+    	localhost1 = "cmd"
+    	}
+  stages {
+      
+        stage('create namespace') {
+      steps {
+        container('buildagent') {
+          dir('/home/jenkins/agent/workspace/lines_examples_cbc_pipeline_test/tests/molecule-tests/molecule/test/'){
+            sh "ls -lart"
+            sh 'curl -v -X PUT --user  $RND_USR:$RND_PSW --upload-file results-test.xml https://repository-ng.intranet.roche.com:443/artifactory/rnd-iac/cbc_test_results/'
+            sh 'curl -v -X PUT --user  $RND_USR:$RND_PSW --upload-file report-test.html https://repository-ng.intranet.roche.com:443/artifactory/rnd-iac/cbc_test_results/'
+             }
+        }      
+      }  
+    }
+  }
+} 
