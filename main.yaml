@@ -1,21 +1,31 @@
-name: CI
-on:
-  push:
-    branches: [ main ]
-jobs:
-  container-test-job:
-    runs-on: ubuntu-latest
-    container:
-      image: devops-docker.repository.intranet.roche.com/staging-cluster-iac:latest
-      env:
-        VAULT_ADDR: https://vault.service.infra-dev.roche.com:8200/
-        VAULT_TOKEN: hvs.4qtemezVYeBYRMIQ8CB0CCYc
-    steps:
-      - uses: actions/checkout@v2   
-      - name: insatll valut 
-        run: |
-          sudo apt update
-          sudo apt install vault
-      - name: create namespace 
-        run: vault namespace create team1
-
+pipeline {
+  agent {
+    kubernetes {
+        yamlFile 'Vault-namespace-test/build-agent.yaml'
+    }
+  }
+  environment {
+        export VAULT_ADDR='https://vault.service.infra-dev.roche.com:8200/'
+        export VAULT_TOKEN='hvs.4qtemezVYeBYRMIQ8CB0CCYc'
+    	}
+  stages {
+     stage('insatlling vault') {
+      steps {
+        container('buildagent') {
+          dir('/home'){
+          sh 'sudo apt update'
+          sh "suco apt install vault" 
+          }
+      
+     stage('create vault namespace') {
+      steps {
+        container('buildagent') {
+          dir('/home/jenkins/agent/workspace/lines_examples_cbc_pipeline_test/tests/molecule-tests/molecule/test/'){
+            sh "ls -lart"
+            sh 'vault namespace create team1'
+           
+             }
+        }      
+      }  
+    }
+  }
