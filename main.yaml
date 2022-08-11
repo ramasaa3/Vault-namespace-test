@@ -1,0 +1,21 @@
+name: CI
+on:
+  push:
+    branches: [ main ]
+jobs:
+  container-test-job:
+    runs-on: ubuntu-latest
+    container:
+      image: devops-docker.repository.intranet.roche.com/staging-cluster-iac:latest
+      env:
+        VAULT_ADDR: https://vault.service.infra-dev.roche.com:8200/
+        VAULT_TOKEN: hvs.4qtemezVYeBYRMIQ8CB0CCYc
+    steps:
+      - uses: actions/checkout@v2   
+      - name: insatll valut 
+        run: |
+          sudo apt update
+          sudo apt install vault
+      - name: create namespace 
+        run: vault namespace create team1
+
