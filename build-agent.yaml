@@ -5,7 +5,7 @@ metadata:
  spec:
   containers:
     - name: buildagent
-      image: devops-docker.repository.intranet.roche.com/staging-cluster-iac:latest
+      image: cjeprodr/build-agent:v1.4
       command:
         - cat
       tty: true
