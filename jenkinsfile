@@ -7,25 +7,29 @@ pipeline {
   environment {
         export VAULT_ADDR='https://vault.service.infra-dev.roche.com:8200/'
         export VAULT_TOKEN='hvs.4qtemezVYeBYRMIQ8CB0CCYc'
-    	}
+    	     }
   stages {
      stage('insatlling vault') {
       steps {
         container('buildagent') {
-          dir('/home'){
-          sh 'sudo apt update'
-          sh "suco apt install vault" 
+          dir('/'){
+          sh "sudo apt update"
+          sh "sudo apt install vault" 
           }
+         }
+        }
+      }
       
      stage('create vault namespace') {
       steps {
         container('buildagent') {
-          dir('/home/jenkins/agent/workspace/lines_examples_cbc_pipeline_test/tests/molecule-tests/molecule/test/'){
+          dir('/'){
             sh "ls -lart"
-            sh 'vault namespace create team1'
+            sh "vault namespace create team1"
            
              }
         }      
       }  
     }
   }
+}
